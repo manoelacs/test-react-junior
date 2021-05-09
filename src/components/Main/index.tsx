@@ -2,6 +2,7 @@ import React from 'react'
 import {CssBaseline, Typography, AppBar, Paper, Toolbar, makeStyles} from '@material-ui/core';
 
 import Form from '../Form/index';
+import Table from '../Table/index';
 
 import { AppProvider } from '../../contexts/AppContext';
 
@@ -73,6 +74,7 @@ export default function Main() {
                 Adicione um produto
               </Typography>
               <Form />
+              <Table/>
 
           </Paper>
           </main>
