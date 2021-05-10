@@ -1,7 +1,7 @@
 import DataTable from 'react-data-table-component';
 import React, { useCallback, useRef, useState } from 'react';
 import{ ArrowDownward, Delete, Add, Edit, Search } from '@material-ui/icons';
-import {Button, IconButton, Select, MenuItem, FormControlLabel, Switch} from '@material-ui/core/';
+import {IconButton, Select, MenuItem, FormControlLabel, Switch} from '@material-ui/core/';
 import {mockProducts} from '../../shareds/mockProducts';
 import { AppContext } from '../../contexts/AppContext';
 import { TextField, ClearButton, ContainerForm} from './styles';
@@ -112,7 +112,7 @@ const columns = [
   
   const Table = () => {
 
-    const {products, addProduct, skuExists, deleteProduct} = React.useContext(AppContext);
+    const {products, deleteProduct} = React.useContext(AppContext);
     const [innerData, setInnerData] = useState(products);
     const [editingId, setEditingId] = useState(-1);
     const [filterText, setFilterText] = useState('');
