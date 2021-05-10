@@ -51,7 +51,8 @@ Criar um ContextAPI que irá englobar a tela para salvar o repositório de dados
 **IMPORTANTE: utilizar ContextAPI. Não utilizar Redux.**
 
 -----
-
+# Demo: 
+https://manoelacs.github.io/test-react-junior/
 
 Bibliotecas para utilização
 ---------------------------
@@ -89,6 +90,5 @@ Pontos de avaliação [Opcional/Extra/Diferencial]
 - [ ] Boa documentação
 - [ ] Testes de unidade
 
-# Demo: 
-https://manoelacs.github.io/test-react-junior/
+
 
