@@ -80,7 +80,7 @@ Pontos de avaliação [Opcional/Extra/Diferencial]
 
 - [ ] Validação complexa dos dados (dinheiro para preço do produto)
 - [ ] Modal de feedback de erros
-- [ ] Modal de confirmação de remoção de registro
+- [X] Modal de confirmação de remoção de registro
 - [ ] Modal de visualização dos dados de cada registro
 - [X] Edição de dados do registro
 - [X] Utilização da biblioteca react-data-table-component
