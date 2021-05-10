@@ -21,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface IFormInputs {
+  id: any;
   codeSku: number;
   productName: string;
   price: string;
@@ -40,6 +41,9 @@ const Form = () => {
   const onSubmit = (data: IFormInputs) => {
    
     if(!skuExists(data.codeSku)){
+      console.log(products[products.length-1].id)
+      const id  = (products[products.length-1].id) + 1;
+      data.id = id;
       addProduct(data);
       reset();
       alert(JSON.stringify(data));

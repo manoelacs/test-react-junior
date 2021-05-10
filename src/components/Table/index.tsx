@@ -2,30 +2,72 @@ import DataTable from 'react-data-table-component';
 import React, { useCallback, useRef, useState } from 'react';
 import{ ArrowDownward, Delete, Add, Edit } from '@material-ui/icons';
 import {Button, IconButton, Checkbox, } from '@material-ui/core/';
+import {mockProducts} from '../../shareds/mockProducts';
+import { AppContext } from '../../contexts/AppContext';
 
-const data = [
-    { id: 1, title: 'Conan the Barbarian', year: '1982' },
+
+const actions = (
+  <IconButton
+    color="primary"
+  >
+    <Add />
+  </IconButton>
+);
+const data =  mockProducts//[
+ /*  { id: 1, 
+    codeSku: 768,
+    productName: 'leite camila',
+    price: '5,99',
+    category: { label: 'leite', value: 'Leite'} ,
+  },
+  { id: 2,
+    codeSku: 763,
+    productName: 'leite molico',
+    price: '5,00',
+    category: { label: 'leite', value: 'Leite'} ,
+  },
+  { id: 3,
+    codeSku: 758,
+    productName: 'leite itambé',
+    price: '5,59',
+    category: { label: 'leite', value: 'Leite'} ,
+  }, */
+   /*  { id: 1, title: 'Conan the Barbarian', year: '1982' },
     { id: 2, title: 'Conan the Barbarian', year: '1983' },
-    { id: 3, title: 'Alisson the Barbarian', year: '1985' }
-];
+    { id: 3, title: 'Alisson the Barbarian', year: '1985' } */
+/* ]; */
 const columns = [
     {
-      name: 'Title',
-      selector: 'title',
+      name: 'SKU',
+      selector: 'codeSku',
       sortable: true,
       editable: true,
     },
     {
-      name: 'Year',
-      selector: 'year',
+      name: 'Nome',
+      selector: 'productName',
       sortable: true,
       editable: true,
     },
+    {
+      name: 'Preço',
+      selector: 'price',
+      sortable: true,
+      editable: true,
+    },
+    {
+      name: 'Categoria',
+      selector: 'category',
+      sortable: true,
+      editable: true,
+    },
+    
   ];
   
   const EditableCell = ({ row, index, column, col, onChange }: any) => {
+    //console.log(row, column);
     const [value, setValue] = useState(row[column.selector]);
-  
+
     const handleOnChange = (e: { target: { value: any; }; }) => {
       setValue(e.target.value);
       onChange?.(e);
@@ -46,11 +88,16 @@ const columns = [
     if (col.cell) {
       return col.cell(row, index, column);
     }
+    if(column.selector === "category"){
+      console.log(row["category"].value);
+      return row["category"].value;
+    }   
     return row[column.selector];
   };
   
   const Table = () => {
-    const [innerData, setInnerData] = useState(data);
+    const {products, addProduct, skuExists, deleteProduct} = React.useContext(AppContext);
+    const [innerData, setInnerData] = useState(products);
     const [editingId, setEditingId] = useState(-1);
     let formData = useRef({}).current;
     const isEditing = (record: { id: number; }) => record.id === editingId;
@@ -71,8 +118,9 @@ const columns = [
     const deleteRow = (record: { id: any; }) => {
         if (window.confirm(`Are you sure you want to delete:\r ${record.id}?`)) {
             //const { data } = this.state;
-            const index = data.findIndex(r => r.id === record.id);
-      
+            const index = innerData.findIndex(r => r.id === record.id);
+            setInnerData([...innerData.slice(0, index), ...innerData.slice(index + 1)])
+            deleteProduct(innerData[index].codeSku);
            /*  this.setState(state => ({
               toggleCleared: !state.toggleCleared,
               data: [...state.data.slice(0, index), ...state.data.slice(index + 1)],
@@ -95,7 +143,7 @@ const columns = [
         
         const item = tempData[index];
         tempData.splice(index, 1, {
-          ...item,
+          ...item, 
           ...payload,
         });
         setEditingId(-1);
@@ -109,7 +157,7 @@ const columns = [
       }
       return {
         ...col,
-        cell: (row: { id: number; }, index: any, column: any) => {
+        cell: (row: { id: any; }, index: any, column: any) => {
           const editing = isEditing(row);
           return (
             <EditableCell
@@ -131,7 +179,7 @@ const columns = [
           name: 'Actions',
           allowOverflow: true,
           minWidth: '200px',
-          cell: (row: { id: number; }) => {
+          cell: (row: { id: any; }) => {
             const editable = isEditing(row);
             if (editable) {
               return (
@@ -159,10 +207,11 @@ const columns = [
   
     return (
       <DataTable
-        title="Movie List"
+        title="Lista de Produtos"
         columns={createColumns()}
         data={innerData}
         defaultSortField="title"
+        actions={actions}
       />
     );
   }; export default Table;

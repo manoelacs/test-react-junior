@@ -1,38 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { createContext, ReactNode, useEffect, useState } from 'react';
+import { mockProducts } from '../shareds/mockProducts';
 
 export const AppContext = createContext({} as ContextDataValues);
 
 interface Iproduct{
+    id: any;
     codeSku: number;
     productName: string;
     price: string;
     category: { label: string; value: string };
 }
-const mockProducts = [
-
-    { codeSku: 768,
-      productName: 'leite camila',
-      price: '5,99',
-      category: { label: 'leite', value: 'Leite'}
-    },
-    { codeSku: 763,
-      productName: 'leite molico',
-      price: '5,00',
-      category: { label: 'leite', value: 'Leite'}
-    },
-    { codeSku: 758,
-      productName: 'leite itambé',
-      price: '5,59',
-      category: { label: 'leite', value: 'Leite'}
-    },
-    { codeSku: 668,
-      productName: 'leite regina',
-      price: '5,79',
-      category: { label: 'leite', value: 'Leite'}
-    },
-  ]
-
+const data =  mockProducts;
 interface ContextDataValues{
     products: Iproduct[];
     addProduct: (product: Iproduct) => void;
@@ -50,12 +29,12 @@ export function AppProvider({
     children,
     ...rest } : AppProviderProps){
 
-        const [products, setProducts] = useState<Iproduct[]>( mockProducts ?? []);
+        const [products, setProducts] = useState<Iproduct[]>( data ?? []);
         console.log(products);
 
         const addProduct = (product: Iproduct) => {
             setProducts([...products, product]);
-            mockProducts.concat(product);
+            data.concat(product);
             console.log('produto adicionado');
         }
         const skuExists = (codeSku:number) => {
