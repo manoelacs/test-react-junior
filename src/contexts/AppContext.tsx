@@ -11,7 +11,7 @@ interface Iproduct{
     price: string;
     category: { label: string; value: string };
 }
-const data =  mockProducts;
+//const data =  mockProducts;
 interface ContextDataValues{
     products: Iproduct[];
     addProduct: (product: Iproduct) => void;
@@ -22,27 +22,24 @@ interface ContextDataValues{
 
 interface AppProviderProps{
     children: ReactNode;
-    /* products: Iproduct[];  */   
+    products: Iproduct[];     
 }
 
 export function AppProvider({ 
     children,
     ...rest } : AppProviderProps){
 
-        const [products, setProducts] = useState<Iproduct[]>( data ?? []);
+        const [products, setProducts] = useState<Iproduct[]>( rest.products ?? []);
         console.log(products);
 
         const addProduct = (product: Iproduct) => {
             setProducts([...products, product]);
-            data.concat(product);
-            console.log('produto adicionado');
+           // data.concat(product);
+            console.log('produto adicionado', products);
         }
-        const skuExists = (codeSku:number) => {
-           console.log(codeSku, codeSku.valueOf);
-           const exist =  products.filter(item => item.codeSku === codeSku)
-           console.log(exist);
-           const resp = exist.length > 0 ? true: false;
-           console.log(resp);
+        const skuExists = (codeSku:number) => {          
+           const exist =  products.filter(item => item.codeSku === codeSku)           
+           const resp = exist.length > 0 ? true: false;          
            return resp;
         }
         const deleteProduct = (codeSku: number) => {

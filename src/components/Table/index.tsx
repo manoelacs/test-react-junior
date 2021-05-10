@@ -1,9 +1,10 @@
 import DataTable from 'react-data-table-component';
 import React, { useCallback, useRef, useState } from 'react';
 import{ ArrowDownward, Delete, Add, Edit } from '@material-ui/icons';
-import {Button, IconButton, Checkbox, } from '@material-ui/core/';
+import {Button, IconButton, Select, MenuItem} from '@material-ui/core/';
 import {mockProducts} from '../../shareds/mockProducts';
 import { AppContext } from '../../contexts/AppContext';
+import { TextField, ClearButton} from './styles';
 
 
 const actions = (
@@ -13,29 +14,7 @@ const actions = (
     <Add />
   </IconButton>
 );
-const data =  mockProducts//[
- /*  { id: 1, 
-    codeSku: 768,
-    productName: 'leite camila',
-    price: '5,99',
-    category: { label: 'leite', value: 'Leite'} ,
-  },
-  { id: 2,
-    codeSku: 763,
-    productName: 'leite molico',
-    price: '5,00',
-    category: { label: 'leite', value: 'Leite'} ,
-  },
-  { id: 3,
-    codeSku: 758,
-    productName: 'leite itambé',
-    price: '5,59',
-    category: { label: 'leite', value: 'Leite'} ,
-  }, */
-   /*  { id: 1, title: 'Conan the Barbarian', year: '1982' },
-    { id: 2, title: 'Conan the Barbarian', year: '1983' },
-    { id: 3, title: 'Alisson the Barbarian', year: '1985' } */
-/* ]; */
+const data =  mockProducts
 const columns = [
     {
       name: 'SKU',
@@ -63,7 +42,12 @@ const columns = [
     },
     
   ];
-  
+  const FilterComponent = ({ filterText, onFilter, onClear }:any) => (
+    <>
+      <TextField id="search" type="text" placeholder="Filter By Name" aria-label="Search Input" value={filterText} onChange={onFilter} />
+      <ClearButton type="button" onClick={onClear}>X</ClearButton>
+    </>
+  );
   const EditableCell = ({ row, index, column, col, onChange }: any) => {
     //console.log(row, column);
     const [value, setValue] = useState(row[column.selector]);
@@ -74,7 +58,27 @@ const columns = [
     };
   
     if (column?.editing) {
-      return (
+      console.log(column?.editing, column, value)
+      if(column.selector === 'category'){
+        console.log('entrou no select')
+        return(
+            <Select
+            /* labelId="demo-simple-select-helper-label"
+            id="demo-simple-select-helper" */
+               value={value}
+            onChange={handleOnChange}
+          >
+            {/*  <MenuItem value="">
+                <em>None</em>
+              </MenuItem> */}
+              <MenuItem value={"leite"}>Leite</MenuItem>
+              <MenuItem value={"doce"}>Doce</MenuItem>
+              <MenuItem value={"iogurte"}>Iogurte</MenuItem>
+          </Select>
+
+        )
+      }
+      return (        
         <input
           type={column.type || 'text'}
           name={column.selector}
@@ -96,10 +100,24 @@ const columns = [
   };
   
   const Table = () => {
+
     const {products, addProduct, skuExists, deleteProduct} = React.useContext(AppContext);
     const [innerData, setInnerData] = useState(products);
     const [editingId, setEditingId] = useState(-1);
+    const [filterText, setFilterText] = useState('');
+    
     let formData = useRef({}).current;
+     const subHeaderComponentMemo = React.useMemo(() => {
+    const handleClear = () => {
+      if (filterText) {
+
+        setFilterText('');
+      }
+    };
+
+    return <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
+  }, [filterText]);
+
     const isEditing = (record: { id: number; }) => record.id === editingId;
   
     const formOnChange = (event: { target: { name: any; value: any; }; }) => {
@@ -115,16 +133,14 @@ const columns = [
     const edit = (record: { id: any; }) => {
       setEditingId(record.id);
     };
+
     const deleteRow = (record: { id: any; }) => {
-        if (window.confirm(`Are you sure you want to delete:\r ${record.id}?`)) {
-            //const { data } = this.state;
+        if (window.confirm(`Você tem certeza que quer deletar o produto:\r ${record.id}?`)) {
+
             const index = innerData.findIndex(r => r.id === record.id);
+
             setInnerData([...innerData.slice(0, index), ...innerData.slice(index + 1)])
             deleteProduct(innerData[index].codeSku);
-           /*  this.setState(state => ({
-              toggleCleared: !state.toggleCleared,
-              data: [...state.data.slice(0, index), ...state.data.slice(index + 1)],
-            })); */
           }
         console.log(record.id);
     };
@@ -133,17 +149,19 @@ const columns = [
       setEditingId(-1);
     };
   
-    const save = (item: any) => {
-      const payload = { ...item, ...formData };
+    const save = (row: any) => {
+      const payload = { ...row, ...formData };
       const tempData = [...innerData];
+      console.log(row, formData);
   
       
-      const index = tempData.findIndex(item => editingId === item.id);
+      const index = tempData.findIndex(row => editingId === row.id);
       if (index > -1) {
         
-        const item = tempData[index];
+        const editRow = tempData[index];
+        console.log(editRow);
         tempData.splice(index, 1, {
-          ...item, 
+          ...editRow, 
           ...payload,
         });
         setEditingId(-1);
@@ -176,7 +194,7 @@ const columns = [
       return [
         ...mergedColumns,
         {
-          name: 'Actions',
+          name: 'Ações',
           allowOverflow: true,
           minWidth: '200px',
           cell: (row: { id: any; }) => {
@@ -184,8 +202,15 @@ const columns = [
             if (editable) {
               return (
                 <div>
-                  <button type="button" onClick={() => save(row)} style={{ backgroundColor: 'lightgreen' }}>save</button>
-                  <button type="button" onClick={cancel} style={{ backgroundColor: 'orangered' }}>cancel</button>
+                  <button 
+                  type="button" 
+                  onClick={() => save(row)} 
+                  style={{ backgroundColor: 'lightgreen', color:'black' }}>Salvar</button>
+
+                  <button 
+                  type="button" 
+                  onClick={cancel} 
+                  style={{ backgroundColor: 'orangered', color:'white' }}>Cancelar</button>
                 </div>
               );
             }
@@ -209,9 +234,11 @@ const columns = [
       <DataTable
         title="Lista de Produtos"
         columns={createColumns()}
-        data={innerData}
+        data={products}
         defaultSortField="title"
         actions={actions}
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
       />
     );
   }; export default Table;

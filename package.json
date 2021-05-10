@@ -15,6 +15,7 @@
     "@types/react-transition-group": "^4.4.1",
     "react": "^17.0.2",
     "react-data-table-component": "^6.11.7",
+    "react-data-table-component-extensions": "^1.5.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.4.2",
     "react-scripts": "4.0.3",
@@ -49,6 +50,7 @@
   },
   "devDependencies": {
     "@types/react-router-dom": "^5.1.7",
-    "@types/react-select": "^4.0.15"
+    "@types/react-select": "^4.0.15",
+    "@types/styled-components": "^5.1.9"
   }
 }

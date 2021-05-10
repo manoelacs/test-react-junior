@@ -1,65 +1,33 @@
 import React from 'react'
-import {CssBaseline, Typography, AppBar, Paper, Toolbar, makeStyles} from '@material-ui/core';
+import {CssBaseline, Typography, AppBar, Paper, Toolbar, Tab, Tabs, } from '@material-ui/core';
 
 import Form from '../Form/index';
 import Table from '../Table/index';
 
-import { AppProvider } from '../../contexts/AppContext';
+import { useStyles } from './styles';
 
-interface Iproduct {
-  codeSKU: number;
+import { AppContext, AppProvider } from '../../contexts/AppContext';
+
+import { mockProducts } from '../../shareds/mockProducts';
+
+interface Iproduct{
+  id: any;
+  codeSku: number;
   productName: string;
   price: string;
   category: { label: string; value: string };
-}
-const useStyles = makeStyles((theme) => ({
-    appBar: {
-      position: 'relative',
-    },
-    layout: {
-      width: 'auto',
-      marginLeft: theme.spacing(2),
-      marginRight: theme.spacing(2),
-      [theme.breakpoints.up(600 + theme.spacing(2) * 2)]: {
-        width: 600,
-        marginLeft: 'auto',
-        marginRight: 'auto',
-      },
-    },
-    paper: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3),
-      padding: theme.spacing(2),
-      [theme.breakpoints.up(600 + theme.spacing(3) * 2)]: {
-        marginTop: theme.spacing(6),
-        marginBottom: theme.spacing(6),
-        padding: theme.spacing(3),
-      },
-    },
-    stepper: {
-      padding: theme.spacing(3, 0, 5),
-    },
-    buttons: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-    },
-    button: {
-      marginTop: theme.spacing(3),
-      marginLeft: theme.spacing(1),
-    },
-  }));
-
-  
-
+} 
+const data =  mockProducts; 
 export default function Main() {
 
     const classes = useStyles();
-    const [activeStep, setActiveStep] = React.useState(0);    
-    
+    const [activeForm, setActiveForm] = React.useState(0);    
+    const {products, addProduct, skuExists} = React.useContext(AppContext);
+    console.log( products);    
   
     return (
       <React.Fragment>
-        <AppProvider>
+        <AppProvider products = { data }>
           <CssBaseline />
           <AppBar position="absolute" color="default" className={classes.appBar}>
             <Toolbar>
@@ -69,6 +37,7 @@ export default function Main() {
             </Toolbar>
           </AppBar>
           <main className={classes.layout}>
+          
             <Paper className={classes.paper}>
               <Typography component="h1" variant="h4" align="center">
                 Adicione um produto
@@ -76,7 +45,7 @@ export default function Main() {
               <Form />
               <Table/>
 
-          </Paper>
+            </Paper>
           </main>
         </AppProvider>
         </React.Fragment>
