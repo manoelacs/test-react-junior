@@ -1,18 +1,24 @@
 import DataTable from 'react-data-table-component';
 import React, { useCallback, useRef, useState } from 'react';
-import{ ArrowDownward, Delete, Add, Edit } from '@material-ui/icons';
-import {Button, IconButton, Select, MenuItem} from '@material-ui/core/';
+import{ ArrowDownward, Delete, Add, Edit, Search } from '@material-ui/icons';
+import {Button, IconButton, Select, MenuItem, FormControlLabel, Switch} from '@material-ui/core/';
 import {mockProducts} from '../../shareds/mockProducts';
 import { AppContext } from '../../contexts/AppContext';
-import { TextField, ClearButton} from './styles';
+import { TextField, ClearButton, ContainerForm} from './styles';
 
 
 const actions = (
+ <> 
+   <IconButton
+   color="primary"
+ >
+   <Add />
+ </IconButton>
   <IconButton
-    color="primary"
-  >
-    <Add />
-  </IconButton>
+  color="primary"
+>
+    <Search/>
+</IconButton> </>
 );
 const data =  mockProducts
 const columns = [
@@ -44,8 +50,13 @@ const columns = [
   ];
   const FilterComponent = ({ filterText, onFilter, onClear }:any) => (
     <>
-      <TextField id="search" type="text" placeholder="Filter By Name" aria-label="Search Input" value={filterText} onChange={onFilter} />
-      <ClearButton type="button" onClick={onClear}>X</ClearButton>
+      <TextField 
+      id="search" 
+      type="text" 
+      placeholder="Busque pelo nome do produto" 
+      aria-label="Search Input" 
+      value={filterText} onChange={onFilter} />
+      <ClearButton type="button" onClick={onClear}>Limpar</ClearButton>
     </>
   );
   const EditableCell = ({ row, index, column, col, onChange }: any) => {
@@ -93,8 +104,8 @@ const columns = [
       return col.cell(row, index, column);
     }
     if(column.selector === "category"){
-      console.log(row["category"].value);
-      return row["category"].value;
+      console.log(row["category"].label);
+      return row["category"].label;
     }   
     return row[column.selector];
   };
@@ -105,18 +116,29 @@ const columns = [
     const [innerData, setInnerData] = useState(products);
     const [editingId, setEditingId] = useState(-1);
     const [filterText, setFilterText] = useState('');
+    const [theme, setTheme] = React.useState('default');
+
+  const handleChange = () => {
+    if (theme === 'dark') {
+      setTheme('default');
+    } else {
+      setTheme('dark');
+    }
+  };
+    const filteredItems = products.filter(
+      item => item.productName && item.productName.toLowerCase().includes(filterText.toLowerCase()));
     
     let formData = useRef({}).current;
-     const subHeaderComponentMemo = React.useMemo(() => {
-    const handleClear = () => {
-      if (filterText) {
-
-        setFilterText('');
-      }
-    };
-
-    return <FilterComponent onFilter={e => setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
-  }, [filterText]);
+    const subHeaderComponentMemo = React.useMemo(() => {
+        const handleClear = () => {
+          if (filterText) {
+            setFilterText('');
+          }
+        };
+    return <FilterComponent 
+          onFilter={(e: { target: { value: React.SetStateAction<string>; }; }) =>
+          setFilterText(e.target.value)} onClear={handleClear} filterText={filterText} />;
+        }, [filterText]);
 
     const isEditing = (record: { id: number; }) => record.id === editingId;
   
@@ -231,14 +253,27 @@ const columns = [
     }, [mergedColumns]);
   
     return (
+      <ContainerForm>
+      <FormControlLabel
+        label="Dark Mode" 
+        control={(
+          <Switch
+          checked={theme === 'dark'}
+          onChange={handleChange}
+          />
+        )}       
+      />
       <DataTable
         title="Lista de Produtos"
         columns={createColumns()}
-        data={products}
+        data={filteredItems}
         defaultSortField="title"
-        actions={actions}
+       /*  actions={actions} */
         subHeader
         subHeaderComponent={subHeaderComponentMemo}
+        contextActions= { <IconButton ><ArrowDownward/></IconButton>}
+        theme={theme}
       />
+      </ContainerForm>
     );
   }; export default Table;

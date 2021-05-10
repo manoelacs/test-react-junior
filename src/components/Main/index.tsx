@@ -1,5 +1,6 @@
-import React from 'react'
-import {CssBaseline, Typography, AppBar, Paper, Toolbar, Tab, Tabs, } from '@material-ui/core';
+import React, { useContext, useState } from 'react'
+import { Add} from '@material-ui/icons'
+import {CssBaseline, Typography, AppBar, Paper, Toolbar, Tab, Tabs, IconButton } from '@material-ui/core';
 
 import Form from '../Form/index';
 import Table from '../Table/index';
@@ -20,19 +21,23 @@ interface Iproduct{
 const data =  mockProducts; 
 export default function Main() {
 
-    const classes = useStyles();
-    const [activeForm, setActiveForm] = React.useState(0);    
-    const {products, addProduct, skuExists} = React.useContext(AppContext);
-    console.log( products);    
+    const classes = useStyles();       
+    const {products, addProduct, skuExists} = useContext(AppContext);
+    const [activeForm, setActiveForm] = useState(false);
+    console.log( products);  
+    const handleVisibleForm = () => {
+      activeForm? setActiveForm(false) : setActiveForm(true)
+    }   
+
   
     return (
       <React.Fragment>
-        <AppProvider products = { data }>
+        <AppProvider products = { data } activeForm={activeForm}>
           <CssBaseline />
           <AppBar position="absolute" color="default" className={classes.appBar}>
             <Toolbar>
               <Typography variant="h6" color="inherit" noWrap>
-                Company name
+                XProdutos
               </Typography>
             </Toolbar>
           </AppBar>
@@ -40,9 +45,14 @@ export default function Main() {
           
             <Paper className={classes.paper}>
               <Typography component="h1" variant="h4" align="center">
-                Adicione um produto
-              </Typography>
-              <Form />
+                Adicione um produto 
+                <IconButton onClick={handleVisibleForm }
+                  color="primary"
+                 >
+                   <Add />
+               </IconButton>   
+              </Typography>              
+              { activeForm && <Form handleVisibleForm = { handleVisibleForm} />}
               <Table/>
 
             </Paper>

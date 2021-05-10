@@ -14,15 +14,18 @@ interface Iproduct{
 //const data =  mockProducts;
 interface ContextDataValues{
     products: Iproduct[];
+    activeForm:boolean;
     addProduct: (product: Iproduct) => void;
     deleteProduct: (codeSku:number) => void;
     //editProduct: () => void;
     skuExists: (codeSku:number) => boolean; 
+    handleVisibleForm:() => void;
 }
 
 interface AppProviderProps{
     children: ReactNode;
-    products: Iproduct[];     
+    products: Iproduct[]; 
+    activeForm: boolean;    
 }
 
 export function AppProvider({ 
@@ -30,6 +33,7 @@ export function AppProvider({
     ...rest } : AppProviderProps){
 
         const [products, setProducts] = useState<Iproduct[]>( rest.products ?? []);
+        const [activeForm, setActiveForm] = useState(rest.activeForm ?? false); 
         console.log(products);
 
         const addProduct = (product: Iproduct) => {
@@ -54,14 +58,25 @@ export function AppProvider({
                  setProducts(products.splice(index, 1))
             } 
         }
+       const  handleVisibleForm = () => {
+            if(activeForm){
+                setActiveForm(false);
+            }
+            setActiveForm(true);
+            
+        }
 
     return(
         <AppContext.Provider 
-            value={{                              
+            value={{
+                //values                              
                 products,
+                activeForm,
+                //Functions
                 addProduct,
                 skuExists,
-                deleteProduct,   
+                deleteProduct, 
+                handleVisibleForm,  
             }}
         >
             { children }           
