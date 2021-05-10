@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Add} from '@material-ui/icons'
-import {CssBaseline, Typography, AppBar, Paper, Toolbar, Tab, Tabs, IconButton } from '@material-ui/core';
+import {CssBaseline, Typography, AppBar, Paper, Toolbar,IconButton } from '@material-ui/core';
 
 import Form from '../Form/index';
 import Table from '../Table/index';
@@ -11,18 +11,12 @@ import { AppContext, AppProvider } from '../../contexts/AppContext';
 
 import { mockProducts } from '../../shareds/mockProducts';
 
-interface Iproduct{
-  id: any;
-  codeSku: number;
-  productName: string;
-  price: string;
-  category: { label: string; value: string };
-} 
+
 const data =  mockProducts; 
 export default function Main() {
 
     const classes = useStyles();       
-    const {products, addProduct, skuExists} = useContext(AppContext);
+    const {products} = useContext(AppContext);
     const [activeForm, setActiveForm] = useState(false);
     console.log( products);  
     const handleVisibleForm = () => {

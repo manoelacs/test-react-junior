@@ -1,10 +1,9 @@
 import React, {useContext} from "react";
-import ReactDOM from "react-dom";
 import Select from "react-select";
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { useForm, Controller } from "react-hook-form";
 
-import { Input, Grid, TextField, FormControlLabel, Checkbox, Button, IconButton } from "@material-ui/core";
+import { Input, Grid, Button} from "@material-ui/core";
 import * as yup from 'yup';
 import { yupResolver } from "@hookform/resolvers/yup";
 

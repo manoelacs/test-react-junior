@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { createContext, ReactNode, useEffect, useState } from 'react';
+import { createContext, ReactNode,  useState } from 'react';
 import { mockProducts } from '../shareds/mockProducts';
 
 export const AppContext = createContext({} as ContextDataValues);
